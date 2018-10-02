@@ -55,7 +55,7 @@ server <- function(input, output) {
     fromJSON(x)}
     
     
-      z<-list(address=var,key="AIzaSyAGdetT_wO2o2Q6LfHFVmEw7yxFnvVpCbo") #create the list of parameters I will send to google.
+      z<-list(address=var,key="") #create the list of parameters I will send to google.
       
       var<-GET("https://maps.googleapis.com/maps/api/geocode/json",query=z) #this is the actual API connection.
       
