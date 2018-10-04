@@ -10,4 +10,7 @@ License: GPL-2
 RoxygenNote: 6.1.0
 LazyData: true
 Encoding: UTF-8
-imports:testthat,knitr,rmarkdown,shiny,magrittr,leaflet,httr,jsonlite
+imports: testthat,knitr,rmarkdown,shiny,magrittr,leaflet,httr,jsonlite
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
