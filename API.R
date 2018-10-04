@@ -1,6 +1,9 @@
+library(shiny)
+library(magrittr)
+library(leaflet)
 library(httr)
 library(jsonlite)
-library(magrittr)
+
 #internal function to parse
 parsing<-function(req)
 {x<-content(req,"text")
@@ -8,39 +11,49 @@ if (identical(x,"")) warning ("HI AMIGO, THIS IS EMPTY! BE CAREFUL!")
 fromJSON(x)}
 
 
-var<-"Thorapadi"  #var input!
+place<-"Thorapadi"  #place input!
 
 
 latlong<-function(place)
 {
-  z<-list(address=var,key=) #create the list of parameters I will send to google.
+ z<-list(address=place,key="") #create the list of parameters I will send to google.
   
-  var<-GET("https://maps.googleapis.com/maps/api/geocode/json",query=z) #this is the actual API connection.
+ place<-GET("https://maps.googleapis.com/maps/api/geocode/json",query=z) #this is the actual API connection.
   
-  stop_for_status(var)
+  stop_for_status(place)
   
   
-  parsed_var<-parsing(var) #I just parse what I receive.
-  x<-parsed_var$results #now all my results are in x!
+  parsed_place<-parsing(place) #I just parse what I receive.
+  x<-parsed_place$results #now all my results are in x!
   x$formatted_address
   list("latitude and longitude"=x$geometry$location, "Complete name" = x$formatted_address)
 }
 
-latlong(var)
 #example we did together
-#var1<-"rydsvagen 246"
-#var2<-"linkoping university"
-#z<-list(origin=var1,destination=var2,key="AIzaSyAGdetT_wO2o2Q6LfHFVmEw7yxFnvVpCbo")
-#var<-GET("https://maps.googleapis.com/maps/api/directions/json",query=z) #this is the actual API connection.
-#x<-parsing(var)
+#place1<-"rydsvagen 246"
+#place2<-"linkoping university"
+#z<-list(origin=place1,destination=place2,key="")
+#place<-GET("https://maps.googleapis.com/maps/api/directions/json",query=z) #this is the actual API connection.
+#x<-parsing(place)
 #unlist(x)
 #x$routes$legs
 #z<-x$routes$legs[[1]]
 #z$distance
 
 
-z<-list(input="museums in linkoping",key=) #create the list of parameters I will send to google.
-var<-GET("https://maps.googleapis.com/maps/api/place/textsearch/json?",query=z) #this is the actual API connection.
-x<-parsing(var)
+z<-list(input="museums in linkoping",key="") #create the list of parameters I will send to google.
+place<-GET("https://maps.googleapis.com/maps/api/place/textsearch/json?",query=z) #this is the actual API connection.
+x<-parsing(place)
 
 x$results[,c("name","rating")]
+
+context("latlong")
+library(API)
+library(testthat)
+context("latlong")
+
+
+test_that("latlong rejects errounous input", {
+  expect_equal(latlong_test(1),2)})
+
+

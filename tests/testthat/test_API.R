@@ -1,7 +1,9 @@
-library(testthat)
 context("latlong")
 library(API)
+library(testthat)
+context("latlong")
 
-test_that("str_length is number of characters", {
-  expect_error(is.numeric(place))
-})
+
+test_that("latlong rejects errounous input", {
+  expect_equal(latlong_test(1),2)})
+

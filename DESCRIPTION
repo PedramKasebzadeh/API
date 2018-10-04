@@ -1,10 +1,19 @@
 Package: API
 Type: Package
-Title: What the package does (short line)
+Title: Intract with Google API
 Version: 1.0
 Date: 2018-10-01
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: Mariano, Roshni and Pedram
+Maintainer: <pedka102@student.liu.se>
+Description: It has multiple functions and will retract data from Google and presents 
+            the results, it also has a shiny app which includes location on map and 
+            Coordinates of a given city.
 License: What license is it under?
-Suggests: testthat
+Imports: 
+testthat,
+shiny,
+magrittr,
+leaflet,
+httr,
+jsonlite
+Encoding: UTF-8
