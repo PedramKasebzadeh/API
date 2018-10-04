@@ -1,19 +1,28 @@
 Package: API
 Type: Package
-Title: Intract with Google API
+<<<<<<< HEAD
+=======
+Title: This package gets connected with geocode API.
 Version: 1.0
 Date: 2018-10-01
-Author: Mariano, Roshni and Pedram
+Author: Mariano, Pedram & Roshni
 Maintainer: <pedka102@student.liu.se>
-Description: It has multiple functions and will retract data from Google and presents 
-            the results, it also has a shiny app which includes location on map and 
-            Coordinates of a given city.
-License: What license is it under?
+Description: It is used to link with goocode API. It is used to provide the exact location with latitude and longitude, the
+             distance between two places and also the nearby places to visit and their ratings.
+License: GPL-2
+LazyData: true
+Depends: R (>= 3.1.0)
+RoxygenNote 6.0.1.9000
+Encoding: UTF-8
 Imports: 
+testthat,
+knitr,
+rmarkdown,
 testthat,
 shiny,
 magrittr,
 leaflet,
 httr,
 jsonlite
-Encoding: UTF-8
+VignetteBuilder: knitr
+>>>>>>> 0253a998eee1e31873bdb45be11683181dc19292
