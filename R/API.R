@@ -45,15 +45,4 @@ z<-list(input="museums in linkoping",key="") #create the list of parameters I wi
 place<-GET("https://maps.googleapis.com/maps/api/place/textsearch/json?",query=z) #this is the actual API connection.
 x<-parsing(place)
 
-x$results[,c("name","rating")]
-
-context("latlong")
-library(API)
-library(testthat)
-context("latlong")
-
-
-test_that("latlong rejects errounous input", {
-  expect_equal(latlong_test(1),2)})
-
 

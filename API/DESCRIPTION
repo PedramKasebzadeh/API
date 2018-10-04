@@ -1,9 +1,13 @@
 Package: API
 Type: Package
-Title: What the package does (short line)
+Title: This package gets connected with geocode API.
 Version: 1.0
 Date: 2018-10-01
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Mariano, Pedram & Roshni
+Maintainer: <pedka102@student.liu.se>
+Description: hi.
+License: GPL-2 
+RoxygenNote: 6.1.0
+LazyData: true
+Encoding: UTF-8
+imports:testthat,knitr,rmarkdown,shiny,magrittr,leaflet,httr,jsonlite
