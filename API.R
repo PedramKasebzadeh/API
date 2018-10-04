@@ -1,3 +1,19 @@
+#' This is an API package 
+#'  
+#'  
+#'  This package intracts with Google API 
+#'  
+#'  @param  place is a character
+#'  
+#'  @return the long and lat
+#'  
+#'  @examples     
+#'  latlong(Tehran)
+#'  
+#'  @export
+ 
+
+
 library(shiny)
 library(magrittr)
 library(leaflet)
