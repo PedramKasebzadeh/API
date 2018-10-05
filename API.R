@@ -1,7 +1,7 @@
 #' This is an API package 
 #'  
 #'  
-#'  This package intracts with Google API 
+#'  This package interacts with Google API 
 #'  
 #'  @param  place is a character
 #'  
