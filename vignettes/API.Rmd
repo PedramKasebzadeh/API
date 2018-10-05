@@ -1,6 +1,6 @@
 ---
 title: "API Vignette"
-author: "Mariano, Roshni and pedram"
+author: "Mariano, Roshni and Pedram"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -9,57 +9,95 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+```{r echo=FALSE, message=FALSE}
+library(shiny)
+library(magrittr)
+library(leaflet)
+library(httr)
+library(jsonlite)
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+This vignette summarizes functions of API package that gets connected with 3 APIs and gives examples on how to use them.
+This package uses three APIs. They are,
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+1. Google geocode api
+2. Google directions api
+3. Google place api
 
-## Vignette Info
+The function "parsing" has been used as an internal function to parse the data.
+**Note: Enter the key in "z" **
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+```{r}
+#internal function to parse
+parsing<-function(req)
+{x<-content(req,"text")
+if (identical(x,"")) warning ("HI AMIGO, THIS IS EMPTY! BE CAREFUL!")
+fromJSON(x)}
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+The function "latlong" uses geocode api. It takes the place "name" as input and returns the exact latitude and longitude along with the formatted address.
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+```{r}
+latlong<-function(place)
+  #place <- "Vellore"
+{
+   z<-list(address=place,key="") #create the list of parameters I will send to google.
+  
+ place<-GET("https://maps.googleapis.com/maps/api/geocode/json",query=z) #this is the actual API connection.
+  
+  stop_for_status(place)
+  
+  parsed_place<-parsing(place) #I just parse what I receive.
+  x<-parsed_place$results #now all my results are in x!
+  x$formatted_address
+  list("latitude and longitude"=x$geometry$location, "Complete name" = x$formatted_address)
+}
 ```
 
-Also a quote using `>`:
+This function "distance" uses directions api. It takes the two place names as origin and destination and returns the exact distance in kilometers between those places.
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+```{r}
+distance<-function(place1,place2)
+  #place1<-"rydsvagen 246"
+  #place2<-"linkoping university"
+{
+z<-list(origin=place1,destination=place2,key="")
+place<-GET("https://maps.googleapis.com/maps/api/directions/json",query=z) #this is the actual API connection.
+x<-parsing(place)
+unlist(x)
+x$routes$legs
+z<-x$routes$legs[[1]]
+z$distance
+}
+```
+
+This function "nearby_place" uses google place api. It takes the place name as user input and returns the exact nearby place names along with their ratings to suggest people the best place to visit.
+
+```{r}
+nearby_place<-function(placename)
+{
+  #placename="museums in linköping"
+z<-list(input=placename,key="") #create the list of parameters I will send to google.
+placename<-GET("https://maps.googleapis.com/maps/api/place/textsearch/json?",query=z) #this is the actual API connection.
+x<-parsing(placename)
+unlist(x)
+list("Nearby place names"=x$results$name, "Ratings" = x$results$rating)
+}
+
+```
+
+The shiny app is created to visualize the exact location in map. Once the place name is entered, the output will be the text with latitude, longitude and the map pointing the exact location.
+
+```{r}
+
+Location <- renderText(paste(c(o1,o2,o3)))
+mymap <- renderLeaflet({
+      x2 %>% leaflet() %>%
+        addTiles() %>%
+        addMarkers(lng = ~lng,
+                   lat = ~lat, popup="Location you was searching for")})
+```
+
+
+> "More to know how to render map outputs"
+([via](https://shiny.rstudio.com/tutorial/written-tutorial/lesson5/))
