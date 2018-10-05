@@ -28,12 +28,12 @@ parsing<-function(req)
 {x<-content(req,"text")
 if (identical(x,"")) warning ("HI AMIGO, THIS IS EMPTY! BE CAREFUL!")
 fromJSON(x)}
-
+f <- "AIzaSyAGdetT_wO2o2Q6LfHFVmEw7yxFnvVpCbo"
 # Using geocode api
-latlong<-function(place)
+latlong<-function(place,f)
   #place <- "Vellore"
 {
-  z<-list(address=place,key="") #create the list of parameters I will send to google.
+  z<-list(address=place,key=f) #create the list of parameters I will send to google.
   
   place<-GET("https://maps.googleapis.com/maps/api/geocode/json",query=z) #this is the actual API connection.
   
