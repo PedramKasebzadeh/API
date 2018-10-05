@@ -4,16 +4,14 @@
 #'  This package intracts with Google API 
 #'  
 #'  @param  place is a character
-#'  @param w is a alpha numeric
 #'  
 #'  @return the long and lat
-#'  
 #'  
 #'  @examples     
 #'  latlong(Tehran)
 #'  
 #'  @export
- 
+
 
 
 library(shiny)
@@ -31,17 +29,15 @@ parsing<-function(req)
 if (identical(x,"")) warning ("HI AMIGO, THIS IS EMPTY! BE CAREFUL!")
 fromJSON(x)}
 
-
-  #place input!
-
-latlong<-function(place,w)
+# Using geocode api
+latlong<-function(place)
+  #place <- "Vellore"
 {
- z<-list(address = place,key = w) #create the list of parameters I will send to google.
+  z<-list(address=place,key="") #create the list of parameters I will send to google.
   
- place<-GET("https://maps.googleapis.com/maps/api/geocode/json",query=z) #this is the actual API connection.
+  place<-GET("https://maps.googleapis.com/maps/api/geocode/json",query=z) #this is the actual API connection.
   
   stop_for_status(place)
-  
   
   parsed_place<-parsing(place) #I just parse what I receive.
   x<-parsed_place$results #now all my results are in x!
@@ -49,21 +45,27 @@ latlong<-function(place,w)
   list("latitude and longitude"=x$geometry$location, "Complete name" = x$formatted_address)
 }
 
-#example we did together
-#place1<-"rydsvagen 246"
-#place2<-"linkoping university"
-#z<-list(origin=place1,destination=place2,key="")
-#place<-GET("https://maps.googleapis.com/maps/api/directions/json",query=z) #this is the actual API connection.
-#x<-parsing(place)
-#unlist(x)
-#x$routes$legs
-#z<-x$routes$legs[[1]]
-#z$distance
+# Using directions api
+distance<-function(place1,place2)
+  #place1<-"rydsvagen 246"
+  #place2<-"linkoping university"
+{
+  z<-list(origin=place1,destination=place2,key="")
+  place<-GET("https://maps.googleapis.com/maps/api/directions/json",query=z) #this is the actual API connection.
+  x<-parsing(place)
+  unlist(x)
+  x$routes$legs
+  z<-x$routes$legs[[1]]
+  z$distance
+}
 
-
-z<-list(input="museums in linkoping",key="") #create the list of parameters I will send to google.
-place<-GET("https://maps.googleapis.com/maps/api/place/textsearch/json?",query=z) #this is the actual API connection.
-x<-parsing(place)
-
-
-
+# Using place api
+nearby_place<-function(placename)
+{
+  #placename="museums in linköping"
+  z<-list(input=placename,key="") #create the list of parameters I will send to google.
+  placename<-GET("https://maps.googleapis.com/maps/api/place/textsearch/json?",query=z) #this is the actual API connection.
+  x<-parsing(placename)
+  unlist(x)
+  list("Nearby place names"=x$results$name, "Ratings" = x$results$rating)
+}
