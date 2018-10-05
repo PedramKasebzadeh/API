@@ -4,8 +4,10 @@
 #'  This package intracts with Google API 
 #'  
 #'  @param  place is a character
+#'  @param w is a alpha numeric
 #'  
 #'  @return the long and lat
+#'  
 #'  
 #'  @examples     
 #'  latlong(Tehran)
@@ -30,12 +32,11 @@ if (identical(x,"")) warning ("HI AMIGO, THIS IS EMPTY! BE CAREFUL!")
 fromJSON(x)}
 
 
-place<-"Thorapadi"  #place input!
+  #place input!
 
-
-latlong<-function(place)
+latlong<-function(place,w)
 {
- z<-list(address=place,key="") #create the list of parameters I will send to google.
+ z<-list(address = place,key = w) #create the list of parameters I will send to google.
   
  place<-GET("https://maps.googleapis.com/maps/api/geocode/json",query=z) #this is the actual API connection.
   
