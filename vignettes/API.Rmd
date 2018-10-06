@@ -25,7 +25,6 @@ This package uses three APIs. They are,
 3. Google place api
 
 The function "parsing" has been used as an internal function to parse the data.
-**Note: Enter the key in "z" **
 
 ```{r}
 #internal function to parse
@@ -35,6 +34,7 @@ if (identical(x,"")) warning ("HI AMIGO, THIS IS EMPTY! BE CAREFUL!")
 fromJSON(x)}
 ```
 
+**Note: Enter the key in "z" **
 The function "latlong" uses geocode api. It takes the place "name" as input and returns the exact latitude and longitude along with the formatted address.
 
 ```{r}
@@ -76,7 +76,7 @@ This function "nearby_place" uses google place api. It takes the place name as u
 ```{r}
 nearby_place<-function(placename)
 {
-  #placename="museums in linköping"
+  #placename="museums in stockholm"
 z<-list(input=placename,key="") #create the list of parameters I will send to google.
 placename<-GET("https://maps.googleapis.com/maps/api/place/textsearch/json?",query=z) #this is the actual API connection.
 x<-parsing(placename)
