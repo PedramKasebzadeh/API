@@ -5,20 +5,20 @@ library(leaflet)
 library(httr)
 library(jsonlite)
 
-# Define UI for application that draws a histogram
+# Define UI for application
 ui <- fluidPage(
   
   # Application title
   titlePanel("Google API"),
   
-  # Sidebar with a slider input for number of bins 
+  # Sidebar with a text input and action button
   sidebarLayout(
     sidebarPanel(
       h3(textInput(inputId = "Start",label = "Enter the place name")),
       actionButton(inputId = "Find",label = "Find exact location")
     ),
     
-    # Show a plot of the generated distribution
+    # Show a map
     mainPanel(
       tags$style("#Location {font-size:20px;
                color:darkblue;
@@ -40,7 +40,7 @@ ui <- fluidPage(
   )
 )
 
-# Define server logic required to draw a histogram
+# Define server logic required to output the map and text
 server <- function(input, output) {
   observeEvent(input$Find,{
     
