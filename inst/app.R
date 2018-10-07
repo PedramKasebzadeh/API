@@ -15,6 +15,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       h3(textInput(inputId = "Start",label = "Enter the place name")),
+      h3(textInput(inputId = "key",label = "Enter the key")),
       actionButton(inputId = "Find",label = "Find exact location")
     ),
     
@@ -48,26 +49,22 @@ server <- function(input, output) {
     library(jsonlite)
     
     var <- input$Start
+    k <- input$key
     
+    #internal func to parse
     parsing<-function(req)
     {x<-content(req,"text")
     if (identical(x,"")) warning ("HI AMIGO, THIS IS EMPTY! BE CAREFUL!")
     fromJSON(x)}
     
-    
-      z<-list(address=var,key="") #create the list of parameters I will send to google.
-      
-      var<-GET("https://maps.googleapis.com/maps/api/geocode/json",query=z) #this is the actual API connection.
-      
-      stop_for_status(var)
-      
-      
-      parsed_var<-parsing(var) #I just parse what I receive.
-      x<-parsed_var$results #now all my results are in x!
-      x$formatted_address
-    x1 <- list("latitude and longitude"=x$geometry$location, "Complete name" = x$formatted_address)
-    
-    
+    z<-list(address=var,key=k) #create the list of parameters I will send to google.
+    var<-GET("https://maps.googleapis.com/maps/api/geocode/json",query=z) #this is the actual API connection.
+    stop_for_status(var)
+    parsed_var<-parsing(var) #I just parse what I receive.
+    x<-parsed_var$results #now all my results are in x!
+    x$formatted_address
+    x1 <- list("latitude and longitude"=x$geometry$location, "Complete name" = x$formatted_address) 
+     
     lat <- as.numeric(unname(x1[[1]][1]))
     lng <- as.numeric(unname(x1[[1]][2]))
     loc <- as.character(unname(x1[[2]][1]))
@@ -75,21 +72,20 @@ server <- function(input, output) {
     
     o1<-paste("Latitude:",lat,sep="")
     o2<-paste("Longitude:",lng,sep="")
-    o3<-paste("Location:",loc,sep="")
-    
+    o3<-paste("Location:",loc,sep="") 
+      
     output$Location <- renderText(paste(c(o1,o2,o3)))
     
     output$mymap <- renderLeaflet({
-      x2 %>% leaflet() %>%
+      x2 %>% leaflet(padding = 3) %>%
         addTiles() %>%
         addMarkers(lng = ~lng,
                    lat = ~lat, popup="Location you was searching for")
-    
-    
+      
+      
     })
   })
 }
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
